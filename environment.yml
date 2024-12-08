@@ -1,0 +1,16 @@
+name: sam2
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.11
+
+  - pytorch==2.5.1
+  - pytorch-cuda==12.4
+  - torchvision==0.20.1
+
+  - ffmpeg==7.1.0
+
+  - pip:
+    - -e ./sam2[notebooks,interactive-demo,dev]
