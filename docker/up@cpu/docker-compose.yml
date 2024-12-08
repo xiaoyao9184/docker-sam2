@@ -1,0 +1,10 @@
+
+
+services:
+  sam2:
+    image: xiaoyao9184/sam2:main
+    container_name: sam2-nb
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./../../sam2/checkpoints:/app/checkpoints

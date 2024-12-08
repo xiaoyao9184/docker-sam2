@@ -1,0 +1,25 @@
+
+
+services:
+  backend:
+    image: xiaoyao9184/sam2:main
+    container_name: sam2-backend
+    working_dir: /app/demo/backend/server/
+    command: gunicorn --worker-class gthread app:app --workers 1 --threads 2 --bind 0.0.0.0:7263 --timeout 60 --log-level debug
+    environment:
+      - APP_ROOT=/app
+      - APP_URL=http://localhost:7263
+      - MODEL_SIZE=base_plus
+      - DATA_PATH=/data
+      - DEFAULT_VIDEO_PATH=gallery/05_default_juggle.mp4
+    ports:
+      - "7263:7263"
+    volumes:
+      - ./../../sam2/demo/data:/data
+      - ./../../sam2/checkpoints:/app/checkpoints
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
