@@ -1,0 +1,32 @@
+
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libavutil-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    pkg-config \
+    build-essential \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --upgrade pip setuptools
+
+COPY ./sam2/setup.py /app/setup.py
+COPY ./sam2/README.md /app/README.md
+RUN pip install -e ".[notebooks,interactive-demo,dev]" 
+
+COPY ./sam2 /app
+
+ENV APP_ROOT=/app
+
+EXPOSE 8888
+
+VOLUME /app/checkpoints
+VOLUME /data
+
+CMD ["jupyter", "notebook", "--allow-root", "--ip", "0.0.0.0"]

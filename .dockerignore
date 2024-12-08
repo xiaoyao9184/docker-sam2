@@ -1,0 +1,15 @@
+sam2/.git/
+sam2/.github/
+sam2/assets/
+sam2/checkpoints/
+sam2/demo/data/
+sam2/demo/frontend/
+sam2/SAM_2.egg-info/
+sam2/outputs/
+sam2/.clang-format
+sam2/.gitignore
+sam2/.watchmanconfig
+sam2/backend.Dockerfile
+sam2/docker-compose.yaml
+# Ignore generated files
+**/*.pyc
