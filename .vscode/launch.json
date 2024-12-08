@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // NOT work on Windows https://stackoverflow.com/questions/45228395/error-no-module-named-fcntl
+        {
+            "name": "debugpy: sam2 gunicorn",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "gunicorn",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/sam2/demo/backend/server",
+            "args": [
+                // "--worker-tmp-dir", "/dev/shm",
+                "--worker-class", "gthread", "app:app",
+                "--log-level", "info",
+                // "--access-logfile", "/dev/stdout",
+                // "--log-file", "/dev/stderr",
+                "--workers", "1",
+                "--threads", "2",
+                "--bind", "0.0.0.0:7263",
+                "--timeout", "60"
+            ],
+            "env": {
+                "APP_ROOT": "${workspaceFolder}/sam2",
+                "APP_URL": "http://localhost:7263",
+                "MODEL_SIZE": "base_plus",
+                "DATA_PATH": "${workspaceFolder}/sam2/demo/data",
+                "DEFAULT_VIDEO_PATH": "gallery/05_default_juggle.mp4",
+                "PATH": "${env:PATH}:${env:CONDA_PREFIX}/envs/sam2/bin"
+            },
+            "justMyCode": false
+        }
+    ]
+}
