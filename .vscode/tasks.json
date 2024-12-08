@@ -1,0 +1,127 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "docker: compose up frontend",
+            "type": "shell",
+            "command": "docker compose -f ./sam2/docker-compose.yaml up frontend"
+        },
+        {
+            "label": "docker: compose build frontend",
+            "type": "shell",
+            "command": "docker compose -f ./sam2/docker-compose.yaml build frontend"
+        },
+        {
+            "label": "docker: compose up backend@cpu",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/docker/up.backend@cpu/"
+            },
+            "command": "docker compose -p sam2 up"
+        },
+        {
+            "label": "docker: compose up backend@gpu",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/docker/up.backend@gpu/"
+            },
+            "command": "docker compose -p sam2 up"
+        },
+        {
+            "label": "docker: compose up @gpu",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/docker/up@gpu/"
+            },
+            "command": "docker compose -p sam2 up"
+        },
+        {
+            "label": "docker: compose up @cpu",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/docker/up@cpu/"
+            },
+            "command": "docker compose -p sam2 up"
+        },
+        {
+            "label": "docker: build main",
+            "type": "shell",
+            "command": "docker build -t xiaoyao9184/sam2:main -f ./docker/build@source/dockerfile ."
+        },
+        // NOT work on Windows https://stackoverflow.com/questions/45228395/error-no-module-named-fcntl
+        {
+            "label": "conda: run gunicorn",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/sam2/demo/backend/server",
+                "env": {
+                    "APP_ROOT": "${workspaceFolder}/sam2",
+                    "APP_URL": "http://localhost:7263",
+                    "MODEL_SIZE": "base_plus",
+                    "DATA_PATH": "${workspaceFolder}/sam2/demo/data",
+                    "DEFAULT_VIDEO_PATH": "gallery/05_default_juggle.mp4",
+                }
+            },
+            "command": [
+                "conda run --no-capture-output -n sam2",
+                "gunicorn",
+                // "--worker-tmp-dir /dev/shm",
+                "--worker-class gthread app:app",
+                "--log-level info",
+                // "--access-logfile /dev/stdout",
+                // "--log-file /dev/stderr",
+                "--workers 1",
+                "--threads 2",
+                "--bind 0.0.0.0:7263",
+                "--timeout 60"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "conda: jupyter notebook image_predictor_example",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/sam2",
+            },
+            "command": [
+                "conda run --no-capture-output -n sam2 jupyter notebook --allow-root --ip 0.0.0.0 ./notebooks/image_predictor_example.ipynb"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "huggingface-cli: download models 2.1",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    // "HF_ENDPOINT": "https://hf-mirror.com",
+                    // "HF_HUB_ETAG_TIMEOUT": "1000",
+                    // "HF_HUB_DOWNLOAD_TIMEOUT": "1000"
+                }
+            },
+            "command": [
+                "   huggingface-cli download --revision main --cache-dir ./cache/huggingface/hub --local-dir ./sam2/checkpoints --local-dir-use-symlinks False facebook/sam2.1-hiera-large sam2.1_hiera_large.pt",
+                "&& huggingface-cli download --revision main --cache-dir ./cache/huggingface/hub --local-dir ./sam2/checkpoints --local-dir-use-symlinks False facebook/sam2.1-hiera-base-plus sam2.1_hiera_base_plus.pt",
+                "&& huggingface-cli download --revision main --cache-dir ./cache/huggingface/hub --local-dir ./sam2/checkpoints --local-dir-use-symlinks False facebook/sam2.1-hiera-small sam2.1_hiera_small.pt",
+                "&& huggingface-cli download --revision main --cache-dir ./cache/huggingface/hub --local-dir ./sam2/checkpoints --local-dir-use-symlinks False facebook/sam2.1-hiera-tiny sam2.1_hiera_tiny.pt",
+            ]
+        },
+        {
+            "label": "bash: download_ckpts",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/sam2/checkpoints"
+            },
+            "command": [
+                "bash download_ckpts.sh"
+            ]
+        },
+        {
+            "label": "conda: create env",
+            "type": "shell",
+            "command": [
+                "conda env create -f ./environment.yml"
+            ]
+        }
+    ]
+}
