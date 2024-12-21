@@ -48,6 +48,29 @@
             "type": "shell",
             "command": "docker build -t xiaoyao9184/sam2:main -f ./docker/build@source/dockerfile ."
         },
+        // working on Windows
+        {
+            "label": "conda: run waitress",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/sam2/demo/backend/server",
+                "env": {
+                    "APP_ROOT": "${workspaceFolder}/sam2",
+                    // "APP_URL": "http://localhost:7263",
+                    "MODEL_SIZE": "base_plus",
+                    "DATA_PATH": "${workspaceFolder}/sam2/demo/data",
+                    "DEFAULT_VIDEO_PATH": "gallery/05_default_juggle.mp4",
+                }
+            },
+            "command": [
+                "conda run --no-capture-output -n sam2",
+                "waitress-serve",
+                "--threads", "2",
+                "--port", "7263",
+                "app:app"
+            ],
+            "problemMatcher": []
+        },
         // NOT work on Windows https://stackoverflow.com/questions/45228395/error-no-module-named-fcntl
         {
             "label": "conda: run gunicorn",

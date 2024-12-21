@@ -14,3 +14,4 @@ dependencies:
 
   - pip:
     - -e ./sam2[notebooks,interactive-demo,dev]
+    - waitress==3.0.2

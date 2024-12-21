@@ -1,6 +1,29 @@
 {
     "version": "0.2.0",
     "configurations": [
+        // working on Windows
+        {
+            "name": "debugpy: sam2 waitress",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "waitress",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/sam2/demo/backend/server",
+            "args": [
+                "--threads", "2",
+                "--port", "7263",
+                "app:app"
+            ],
+            "env": {
+                "APP_ROOT": "${workspaceFolder}/sam2",
+                // "APP_URL": "http://localhost:7263",
+                "MODEL_SIZE": "base_plus",
+                "DATA_PATH": "${workspaceFolder}/sam2/demo/data",
+                "DEFAULT_VIDEO_PATH": "gallery/05_default_juggle.mp4",
+                "PATH": "${env:PATH}:${env:CONDA_PREFIX}/envs/sam2/bin"
+            },
+            "justMyCode": false
+        },
         // NOT work on Windows https://stackoverflow.com/questions/45228395/error-no-module-named-fcntl
         {
             "name": "debugpy: sam2 gunicorn",
